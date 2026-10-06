@@ -24,7 +24,7 @@
 1. [Google Cloud Console](https://console.cloud.google.com/) でプロジェクトを作成
 2. 「Maps JavaScript API」を有効にする
 3. 「認証情報」で APIキーを作成
-4. キーの制限で「HTTPリファラー」に公開先URL（例: `https://<user>.github.io/*`）を設定
+4. キーの制限で「HTTPリファラー」に公開先URL（例: `https://jliuchuan-cmd.github.io/*`）を設定
    （他人にキーを使われないようにするため）
 
 ## 使い方
@@ -40,8 +40,19 @@ npx http-server -p 8080
 
 ### スマホで使う（GitHub Pages）
 
-リポジトリの Settings → Pages で `main` ブランチを公開すると、
-`https://<user>.github.io/denchu/` で使えます。
+1. **リポジトリを公開にする**（無料プランでは非公開リポジトリを Pages で公開できないため）
+   Settings → 一番下の「Danger Zone」→「Change visibility」→「Make public」
+   ※ 記録データはスマホ内にだけ保存され、APIキーもアプリ画面で入力する方式なので、
+   公開しても記録やキーが GitHub に載ることはありません。
+2. **Pages を有効にする**
+   Settings → Pages →「Build and deployment」の Source を「Deploy from a branch」にし、
+   Branch で `claude/google-maps-pole-recorder-8nn60c` と `/ (root)` を選んで「Save」
+3. 1〜2分後、`https://jliuchuan-cmd.github.io/denchu/` で使えます
+4. スマホで開いて位置情報を「許可」し、ホーム画面に追加しておくとアプリのように使えます
+   （iPhone: 共有ボタン →「ホーム画面に追加」）
+
+リポジトリを非公開のままにしたい場合は、[Netlify Drop](https://app.netlify.com/drop) に
+ファイル一式をドラッグ＆ドロップしても https のURLで公開できます。
 
 ## ファイル構成
 
