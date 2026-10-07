@@ -127,6 +127,8 @@ label input, label select, label textarea {
 .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .row select, .row input { width: auto; margin-top: 4px; }
 .row input[name=yearInput] { flex: 1; min-width: 90px; }
+.row input[name=height] { width: 4.5em; }
+.row input[name=strength] { width: 5.5em; }
 
 .muted { color: var(--muted); }
 .small { font-size: 12px; }
