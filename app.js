@@ -38,6 +38,10 @@
     return `${year}年` + (wa ? `（${wa}）` : '');
   }
 
+  // 長さ-強度（例: 13-500）。片方だけの場合は不明側を「?」で表示
+  const specLabel = (p) => (p.height || p.strength ? `${p.height || '?'}-${p.strength || '?'}` : '');
+  const toNum = (v) => parseInt(v, 10) || null;
+
   const gmapsUrl = (p) => `https://www.google.com/maps/search/?api=1&query=${p.lat.toFixed(7)},${p.lng.toFixed(7)}`;
 
   function el(tag, props = {}, ...children) {
@@ -52,6 +56,7 @@
   function popupFor(p) {
     const box = el('div', { className: 'popup' },
       el('b', { textContent: yearLabel(p.year) }),
+      specLabel(p) ? el('div', { textContent: specLabel(p) }) : null,
       p.number ? el('div', { textContent: p.number }) : null,
       p.owner ? el('div', { textContent: p.owner }) : null,
       p.memo ? el('div', { textContent: p.memo }) : null,
@@ -114,6 +119,8 @@
     form.reset();
     form.era.value = p.era && p.era !== 'ad' ? p.era : 'ad';
     form.yearInput.value = p.year ? (form.era.value === 'ad' ? p.year : p.year - ERA_BASE[form.era.value]) : '';
+    form.height.value = p.height || '';
+    form.strength.value = p.strength || '';
     form.number.value = p.number || '';
     form.owner.value = p.owner || '';
     form.memo.value = p.memo || '';
@@ -168,6 +175,8 @@
       id: editing.id || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()),
       year,
       era: form.era.value,
+      height: toNum(form.height.value),
+      strength: toNum(form.strength.value),
       number: form.number.value.trim(),
       owner: form.owner.value,
       memo: form.memo.value.trim(),
@@ -221,7 +230,7 @@
       p.photo ? el('img', { src: p.photo, alt: '' }) : null,
       el('div', { className: 'info' },
         el('b', { textContent: yearLabel(p.year) }),
-        el('div', { textContent: [p.number, p.owner, p.memo].filter(Boolean).join(' / ') || '—' }),
+        el('div', { textContent: [specLabel(p), p.number, p.owner, p.memo].filter(Boolean).join(' / ') || '—' }),
       ),
       el('div', { className: 'acts' },
         el('button', {
@@ -249,9 +258,9 @@
       const s = v == null ? '' : String(v);
       return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
     };
-    const head = ['ID', '緯度', '経度', '製造年', '電柱番号', '種別', 'メモ', '写真', '登録日時', 'GoogleマップURL'];
+    const head = ['ID', '緯度', '経度', '製造年', '長さ(m)', '強度', '電柱番号', '種別', 'メモ', '写真', '登録日時', 'GoogleマップURL'];
     const rows = sortedPoles().map((p) => [
-      p.id, p.lat.toFixed(7), p.lng.toFixed(7), p.year || '', p.number, p.owner, p.memo,
+      p.id, p.lat.toFixed(7), p.lng.toFixed(7), p.year || '', p.height || '', p.strength || '', p.number, p.owner, p.memo,
       p.photo ? 'あり' : '', p.createdAt, gmapsUrl(p),
     ]);
     // 先頭のBOMで Excel でも文字化けしない
